@@ -1,0 +1,234 @@
+-- ==========================================
+-- DATA ANALYTICS DASHBOARD DATABASE
+-- ==========================================
+
+-- Create Table
+
+CREATE TABLE sales (
+    id SERIAL PRIMARY KEY,
+    product VARCHAR(100) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    quantity INT NOT NULL,
+    sale_date DATE NOT NULL
+);
+
+-- ==========================================
+-- INSERT SAMPLE DATA
+-- ==========================================
+
+INSERT INTO sales(product, category, amount, quantity, sale_date)
+VALUES
+('Laptop', 'Electronics', 65000, 1, '2025-01-10'),
+('Mobile', 'Electronics', 30000, 2, '2025-01-12'),
+('TV', 'Electronics', 55000, 1, '2025-02-01'),
+('Camera', 'Electronics', 45000, 2, '2025-02-05'),
+('Headphones', 'Electronics', 4000, 4, '2025-02-15'),
+('Shoes', 'Fashion', 2500, 3, '2025-01-15'),
+('Watch', 'Accessories', 5000, 1, '2025-01-20'),
+('T-Shirt', 'Fashion', 1200, 5, '2025-02-10'),
+('Bag', 'Accessories', 3500, 2, '2025-03-05'),
+('Keyboard', 'Electronics', 2500, 3, '2025-03-10'),
+('Mouse', 'Electronics', 1200, 5, '2025-03-15'),
+('Tablet', 'Electronics', 28000, 1, '2025-04-01'),
+('Speaker', 'Electronics', 7500, 2, '2025-04-12'),
+('Jeans', 'Fashion', 2200, 4, '2025-04-18'),
+('Smart Watch', 'Accessories', 15000, 1, '2025-05-05');
+
+-- ==========================================
+-- VIEW ALL SALES
+-- ==========================================
+
+SELECT * FROM sales;
+
+-- ==========================================
+-- TOTAL SALES
+-- ==========================================
+
+SELECT
+SUM(amount) AS total_sales
+FROM sales;
+
+-- ==========================================
+-- TOTAL ORDERS
+-- ==========================================
+
+SELECT
+COUNT(*) AS total_orders
+FROM sales;
+
+-- ==========================================
+-- AVERAGE SALES
+-- ==========================================
+
+SELECT
+ROUND(AVG(amount),2) AS average_sales
+FROM sales;
+
+-- ==========================================
+-- MAXIMUM SALE
+-- ==========================================
+
+SELECT
+MAX(amount) AS highest_sale
+FROM sales;
+
+-- ==========================================
+-- MINIMUM SALE
+-- ==========================================
+
+SELECT
+MIN(amount) AS lowest_sale
+FROM sales;
+
+-- ==========================================
+-- CATEGORY-WISE SALES
+-- ==========================================
+
+SELECT
+category,
+SUM(amount) AS total_sales
+FROM sales
+GROUP BY category;
+
+-- ==========================================
+-- MONTHLY SALES
+-- ==========================================
+
+SELECT
+TO_CHAR(sale_date,'Mon') AS month,
+SUM(amount) AS total_sales
+FROM sales
+GROUP BY
+DATE_TRUNC('month',sale_date),
+TO_CHAR(sale_date,'Mon')
+ORDER BY DATE_TRUNC('month',sale_date);
+
+-- ==========================================
+-- PRODUCT-WISE SALES
+-- ==========================================
+
+SELECT
+product,
+SUM(amount) AS total_sales
+FROM sales
+GROUP BY product
+ORDER BY total_sales DESC;
+
+-- ==========================================
+-- TOP 5 PRODUCTS
+-- ==========================================
+
+SELECT *
+FROM sales
+ORDER BY amount DESC
+LIMIT 5;
+
+-- ==========================================
+-- FILTER BY CATEGORY
+-- ==========================================
+
+SELECT *
+FROM sales
+WHERE category='Electronics';
+
+-- ==========================================
+-- SEARCH PRODUCT
+-- ==========================================
+
+SELECT *
+FROM sales
+WHERE product ILIKE '%Laptop%';
+
+-- ==========================================
+-- SALES BETWEEN DATES
+-- ==========================================
+
+SELECT *
+FROM sales
+WHERE sale_date
+BETWEEN '2025-01-01'
+AND '2025-03-31';
+
+-- ==========================================
+-- SORT SALES (HIGH TO LOW)
+-- ==========================================
+
+SELECT *
+FROM sales
+ORDER BY amount DESC;
+
+-- ==========================================
+-- SORT SALES (LOW TO HIGH)
+-- ==========================================
+
+SELECT *
+FROM sales
+ORDER BY amount ASC;
+
+-- ==========================================
+-- TOTAL SALES BY MONTH
+-- ==========================================
+
+SELECT
+DATE_TRUNC('month',sale_date) AS month,
+SUM(amount) AS total_sales
+FROM sales
+GROUP BY DATE_TRUNC('month',sale_date)
+ORDER BY month;
+
+-- ==========================================
+-- TOTAL QUANTITY SOLD
+-- ==========================================
+
+SELECT
+SUM(quantity) AS total_quantity
+FROM sales;
+
+-- ==========================================
+-- CATEGORY WITH HIGHEST SALES
+-- ==========================================
+
+SELECT
+category,
+SUM(amount) AS total_sales
+FROM sales
+GROUP BY category
+ORDER BY total_sales DESC
+LIMIT 1;
+
+-- ==========================================
+-- KPI QUERY FOR DASHBOARD
+-- ==========================================
+
+SELECT
+SUM(amount) AS total_sales,
+COUNT(*) AS total_orders,
+ROUND(AVG(amount),2) AS average_sales,
+MAX(amount) AS highest_sale,
+MIN(amount) AS lowest_sale,
+SUM(quantity) AS total_quantity
+FROM sales;
+
+-- ==========================================
+-- LAST 10 RECORDS
+-- ==========================================
+
+SELECT *
+FROM sales
+ORDER BY sale_date DESC
+LIMIT 10;
+
+-- ==========================================
+-- DASHBOARD TABLE
+-- ==========================================
+
+SELECT
+id,
+product,
+category,
+amount,
+quantity,
+sale_date
+FROM sales
+ORDER BY sale_date DESC;
